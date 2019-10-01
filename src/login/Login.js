@@ -10,38 +10,64 @@ import "./Login.css"
 
 class Login extends React.Component {
 
-    handleButtonClick = () => {
-        alert(">>> Clicked");
+    constructor() {
+        super();
+
+        this.state = {
+            email: '',
+            password: ''
+        };
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChange(e) {
+        let target = e.target;
+        let value = target.type === 'checkbox' ? target.checked : target.value;
+        let name = target.name;
+
+        this.setState({
+          [name]: value
+        });
     }
 
 
+    this.state = {
+    email: '',
+    password: ''
+    }
+
+
+    handleSubmit(e) {
+        e.preventDefault();
+
+        console.log('The form was submitted with the following data:');
+        console.log(this.state);
+    }
 
     render() {
 
         return (
             <div id="login">
-            <router>
                 <div id="textInCenter">
                     <h1>Login</h1>
                 </div>
-                <Form>
-                    <Form.Group as={Row} controlId="formMail">
-                        <Form.Label column sm={2}>
-                            Email
-                        </Form.Label>
-                        <Col sm={10}>
-                            <Form.Control type="email" placeholder="Email"/>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId="formPassword">
-                        <Form.Label column sm={2}>
-                            Password
-                        </Form.Label>
-                        <Col sm={10}>
-                            <Form.Control type="password" placeholder="Password"/>
-                        </Col>
-                    </Form.Group>
-                </Form>
+
+   <form onSubmit={this.handleSubmit} className="FormFields" onSubmit={this.handleSubmit}>
+            <div className="form-grou">
+                <label className="FormField__Label" htmlFor="email">E-Mail Address</label>
+                <input type="email" class="form-control" className="FormField__Input" placeholder="Enter your email" name="email" value={this.state.email} onChange={this.handleChange} />
+              </div>
+
+              <div className="form-grou">
+                <label className="FormField__Label" htmlFor="password">Password</label>
+                <input type="password" class="form-control" className="FormField__Input" placeholder="Enter your password" name="password" value={this.state.password} onChange={this.handleChange} />
+              </div>
+
+
+            </form>
+
 
                 <div class="container">
                     <div class="row">
@@ -54,7 +80,6 @@ class Login extends React.Component {
                         </div>
                     </div>
                 </div>
-                </router>
             </div>
         );
     }
