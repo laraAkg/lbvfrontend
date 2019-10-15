@@ -1,0 +1,22 @@
+#register{
+background-color:#d7e3f5;
+width:500px;
+padding: 50px;
+margin:100px auto;
+ border-radius:30px;
+}
+
+#textInCenter{
+text-align: center;
+padding: 20px;
+}
+
+#buttonLayoutRight{
+text-align: right;
+margin: 5px;
+}
+
+#buttonLayoutLeft{
+text-align: left;
+margin: 5px;
+}
