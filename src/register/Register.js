@@ -9,36 +9,29 @@ import { validateLogin } from "../helper/Validator";
 import "./register.css";
 
 class Register extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       email: "",
       password: "",
       confPassword: "",
-      male: "",
+      sex: "",
       option: ""
     };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
- onRadiochange = value => {
-    console.log(value);
+ onRadiochange = e => {
+    console.log(e);
   };
 
-  handleChange(e) {
-    let target = e.target;
-    let value = target.type === "checkbox" ? target.checked : target.value;
-    let name = target.name;
-
+handleChange = e => {
     this.setState({
-      [name]: value
-    });
+      [e.target.name]: e.target.value
+    })
   }
 
-  handleSubmit(e) {
+  handleSubmit= e => {
     e.preventDefault();
 
     console.log("The form was submitted with the following data:");
@@ -56,9 +49,8 @@ class Register extends React.Component {
         <form
           onSubmit={this.handleSubmit}
           className="FormFields"
-          onSubmit={this.handleSubmit}
         >
-          <div className="form-grou">
+          <div className="form-group">
             <label className="FormField__Label" htmlFor="email">
               E-Mail Address
             </label>
@@ -73,7 +65,7 @@ class Register extends React.Component {
             />
           </div>
 
-          <div className="form-grou">
+          <div className="form-group">
             <label className="FormField__Label" htmlFor="password">
               Password
             </label>
@@ -88,7 +80,7 @@ class Register extends React.Component {
             />
           </div>
 
-          <div className="form-grou">
+          <div className="form-group">
             <label className="FormField__Label" htmlFor="password">
               Confirm Password
             </label>
@@ -103,14 +95,29 @@ class Register extends React.Component {
             />
           </div>
 
+          <div className="form-group">
+            <RadioGroup
+                         name="sex"
+                         value={this.state.male}
+                         options={[
+                           { label: "Male", value: "male" },
+                           { label: "Female", value: "female" }
+                         ]}
+                         onChange={this.handleChange}
+                       />
+          </div>
+
+
           <Form.Group as={Col} controlId="formDropdown">
             <Form.Label>State</Form.Label>
-            <Form.Control as="select">
+            <Form.Control as="select"
+            value={this.state.option}
+            onChange={this.handleChange}
+            name="option"
+            >
               <option>Switzerland</option>
               <option>Germany</option>
               <option>France</option>
-              value={this.state.option}
-              onChange={this.handleChange}
             </Form.Control>
           </Form.Group>
 
