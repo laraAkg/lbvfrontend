@@ -12,7 +12,15 @@ class Register extends React.Component {
   constructor(props) {
     super(props);
 
+    this.formDefaults = {
+    email: {value:'', isValid: true, message: 'Invalid Email'},
+    password: {value:'', isValid: true, message: 'Invalid password'},
+    confPassword: {value:'', isValid: true, message: 'Invalid password'},
+
+    }
+
     this.state = {
+    ...this.formDefaults,
       email: "",
       password: "",
       confPassword: "",
@@ -95,18 +103,12 @@ handleChange = e => {
             />
           </div>
 
-          <div className="form-group">
-            <RadioGroup
-                         name="sex"
-                         value={this.state.male}
-                         options={[
-                           { label: "Male", value: "male" },
-                           { label: "Female", value: "female" }
-                         ]}
-                         onChange={this.handleChange}
-                       />
-          </div>
-
+         <div className="form-group">
+                     <Form.Group>
+                       <Form.Check name="formHorizontalRadios" type="radio" label="Male" />
+                       <Form.Check name="formHorizontalRadios" type="radio" label="Female" />
+                     </Form.Group>
+         </div>
 
           <Form.Group as={Col} controlId="formDropdown">
             <Form.Label>State</Form.Label>
