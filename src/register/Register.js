@@ -16,16 +16,12 @@ class Register extends React.Component {
     email: {value:'', isValid: true, message: 'Invalid Email'},
     password: {value:'', isValid: true, message: 'Invalid password'},
     confPassword: {value:'', isValid: true, message: 'Invalid password'},
+    option: {value:'', isValid: true, message: 'Invalid option'},
 
     }
 
     this.state = {
-    ...this.formDefaults,
-      email: "",
-      password: "",
-      confPassword: "",
-      sex: "",
-      option: ""
+    ...this.formDefaults
     };
   }
 
@@ -35,16 +31,27 @@ class Register extends React.Component {
 
 handleChange = e => {
     this.setState({
-      [e.target.name]: e.target.value
-    })
+      [e.target.name]:{...this.state[e.target.name],
+      value:e.target.value}
+
+    });
   }
 
   handleSubmit= e => {
-    e.preventDefault();
 
-    console.log("The form was submitted with the following data:");
+     fetch("http://localhost:8080/ok",
+     {
+         headers: {
+           'Accept': 'application/json',
+           'Content-Type': 'application/json'
+         },
+         method: "POST",
+         body: JSON.stringify({val: this.state.password.value}),
+         mode: 'no-cors'
+     })
+     .then(function(res){ console.log(res) })
+     .catch(function(res){ console.log(res) })
     console.log(this.state);
-    validateLogin("Hello");
   }
 
   render() {
@@ -68,7 +75,7 @@ handleChange = e => {
               className="FormField__Input"
               placeholder="Enter your email"
               name="email"
-              value={this.state.email}
+              value={this.state.email.value}
               onChange={this.handleChange}
             />
           </div>
@@ -83,7 +90,7 @@ handleChange = e => {
               className="FormField__Input"
               placeholder="Enter your password"
               name="password"
-              value={this.state.password}
+              value={this.state.password.value}
               onChange={this.handleChange}
             />
           </div>
@@ -98,7 +105,7 @@ handleChange = e => {
               className="FormField__Input"
               placeholder="Confirm your password"
               name="confPassword"
-              value={this.state.confPassword}
+              value={this.state.confPassword.value}
               onChange={this.handleChange}
             />
           </div>
@@ -113,7 +120,7 @@ handleChange = e => {
           <Form.Group as={Col} controlId="formDropdown">
             <Form.Label>State</Form.Label>
             <Form.Control as="select"
-            value={this.state.option}
+            value={this.state.option.value}
             onChange={this.handleChange}
             name="option"
             >

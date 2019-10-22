@@ -12,39 +12,58 @@ import { validateLogin }  from "../helper/Validator"
 import "./Login.css";
 
 class Login extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
+    this.formDefaults = {
+    email: {value:'', isValid: true, message: 'Invalid Email'},
+    password: {value:'', isValid: true, message: 'Invalid password'},
+    }
 
     this.state = {
-      email: "",
-      password: ""
+    ...this.formDefaults
     };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
- redirectRegister = () => {
-    return this.props.history.push('/register');
-}
-
-  handleChange(e) {
-    let target = e.target;
-    let value = target.type === "checkbox" ? target.checked : target.value;
-    let name = target.name;
-
+handleChange = e => {
     this.setState({
-      [name]: value
+      [e.target.name]:{...this.state[e.target.name],
+      value:e.target.value}
+
     });
   }
+ handleSubmit= e => {
 
-  handleSubmit(e) {
-    e.preventDefault();
+ const obj = {
+    val: "try"
+ }
 
-    console.log("The form was submitted with the following data:");
-    console.log(this.state);
-    validateLogin("Hello")
-  }
+fetch("http://localhost:8080/ok",
+     {
+         headers: {
+           'Accept': 'application/json',
+           'Content-Type': 'application/json'
+         },
+         method: "POST",
+         body: JSON.stringify(this.state.email.value),
+         mode: 'no-cors'
+     })
+     .then(function(res){ console.log(res) })
+          .catch(function(res){ console.log(res) })
+         console.log(this.state);
+     /*
+      .then(response => {
+        if(response.ok) return response.json();
+        throw new Error('Request failed.');
+      })
+      .then(data => {
+       // this.setState({value: this.state.email.value,);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+      */
+      }
 
   render() {
     return (
@@ -68,7 +87,7 @@ class Login extends React.Component {
               className="FormField__Input"
               placeholder="Enter your email"
               name="email"
-              value={this.state.email}
+              value={this.state.email.value}
               onChange={this.handleChange}
             />
           </div>
@@ -83,7 +102,7 @@ class Login extends React.Component {
               className="FormField__Input"
               placeholder="Enter your password"
               name="password"
-              value={this.state.password}
+              value={this.state.password.value}
               onChange={this.handleChange}
             />
           </div>
@@ -97,7 +116,9 @@ class Login extends React.Component {
               </div>
             </div>
             <div className="col" id="buttonLayoutRight">
-              <Button variant="primary">Login</Button>
+             <Button variant="primary" onClick={this.handleSubmit}>
+                              Login{" "}
+                            </Button>
             </div>
           </div>
         </form>
