@@ -21,10 +21,15 @@ class Login extends React.Component {
     }
 
     this.state = {
+    errors: { email: true },
+
     ...this.formDefaults
     };
   }
 
+ checkEmail = value => {
+    return validator.isEmail(value);
+  };
 
 
 handleChange = e => {
@@ -35,40 +40,39 @@ handleChange = e => {
 
     });
   }
- handleSubmit= e => {
+ handleSubmit = e => {
+    const isEmailValid = this.checkEmail(this.state.email.value);
 
- const obj = {
-    val: "try"
- }
-
-fetch("http://localhost:8080/ok",
-     {
-         headers: {
-           'Accept': 'application/json',
-           'Content-Type': 'application/json'
-         },
-         method: "POST",
-         body: JSON.stringify(this.state.email.value),
-         mode: 'no-cors'
-     })
-     .then(function(res){ console.log(res) })
-          .catch(function(res){ console.log(res) })
-         console.log(this.state);
-     /*
-      .then(response => {
-        if(response.ok) return response.json();
-        throw new Error('Request failed.');
-      })
-      .then(data => {
-       // this.setState({value: this.state.email.value,);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-      */
+    this.setState({
+      errors: {
+        email: isEmailValid
       }
+    });
+
+    if (this.state.errors.email ) {
+      fetch("http://localhost:8080/ok", {
+        headers: {
+          Accept: "text/plain",
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({ val: this.state.password.value })
+      })
+        .then(function(res) {
+          res.json().then(value => console.log(value));
+        })
+        .catch(function(res) {
+          console.log(res);
+        });
+    }
+    console.log(this.state);
+  };
 
   render() {
+      let errorEmail;
+      if (!this.state.errors.email) {
+        errorEmail = <span class="error">{this.state.email.message}</span>;
+      }
     return (
       <div id="login">
         <div id="textInCenter">
@@ -93,6 +97,8 @@ fetch("http://localhost:8080/ok",
               value={this.state.email.value}
               onChange={this.handleChange}
             />
+                        {errorEmail}
+
           </div>
 
           <div className="form-group">

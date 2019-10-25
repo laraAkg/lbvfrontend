@@ -13,14 +13,15 @@ class Register extends React.Component {
     super(props);
 
     this.formDefaults = {
-      email: { value: "", isValid: true, message: "Invalid Email" },
-      password: { value: "", isValid: true, message: "Password too short" },
-      confPassword: { value: "", isValid: true, message: "Invalid password" },
-      option: { value: "", isValid: true, message: "Invalid option" }
+      email: { value: "", message: "Invalid Email" },
+      password: { value: "", message: "Password too short" },
+      confPassword: { value: "", message: "Password not same" },
+      sex: { value: "", message: "Please select your sex" },
+      option: { value: "", message: "Invalid option" }
     };
 
     this.state = {
-        errors: {email: true, password: true},
+      errors: { email: true, password: true, confPassword: true, sex: true },
 
       ...this.formDefaults
     };
@@ -34,8 +35,15 @@ class Register extends React.Component {
     return value.length >= 6;
   };
 
-  handleChange = e => {
+  checkConfirmPassword = value => {
+    return value === this.state.password.value;
+  };
 
+  checkIfSexNull = value => {
+    return !value === "";
+  };
+
+  handleChange = e => {
     this.setState({
       [e.target.name]: { ...this.state[e.target.name], value: e.target.value }
     });
@@ -44,17 +52,23 @@ class Register extends React.Component {
   handleSubmit = e => {
     const isEmailValid = this.checkEmail(this.state.email.value);
     const isPasswordValid = this.checkPassword(this.state.password.value);
+    const isConfPasswordValid = this.checkConfirmPassword(
+      this.state.confPassword.value
+    );
+    const isSexSelected = this.checkIfSexNull(this.state.sex.value);
     this.setState({
       errors: {
         email: isEmailValid,
-        password: isPasswordValid
+        password: isPasswordValid,
+        confPassword: isConfPasswordValid,
+        sex: isSexSelected
       }
     });
 
-    if(this.state.errors.email && this.state.errors.password) {
+    if (this.state.errors.email && this.state.errors.password) {
       fetch("http://localhost:8080/ok", {
         headers: {
-          "Accept": "text/plain",
+          Accept: "text/plain",
           "Content-Type": "application/json"
         },
         method: "POST",
@@ -68,19 +82,32 @@ class Register extends React.Component {
         });
     }
     console.log(this.state);
-
   };
 
   render() {
-  let errorEmail;
-  if(!this.state.errors.email) {
-   errorEmail =    <span class="error">{this.state.email.message}</span>;
-  }
+    let errorEmail;
+    if (!this.state.errors.email) {
+      errorEmail = <span className="error">{this.state.email.message}</span>;
+    }
 
-  let errorPassword;
-  if(!this.state.errors.password) {
-   errorPassword =    <span class="error">{this.state.password.message}</span>;
-  }
+    let errorPassword;
+    if (!this.state.errors.password) {
+      errorPassword = (
+        <span className="error">{this.state.password.message}</span>
+      );
+    }
+
+    let errorConfPassword;
+    if (!this.state.errors.confPassword) {
+      errorConfPassword = (
+        <span className="error">{this.state.confPassword.message}</span>
+      );
+    }
+
+    let errorSex;
+    if (!this.state.errors.sex) {
+      errorSex = <span className="error">{this.state.sex.message}</span>;
+    }
 
     return (
       <div id="register">
@@ -134,6 +161,7 @@ class Register extends React.Component {
               value={this.state.confPassword.value}
               onChange={this.handleChange}
             />
+            {errorConfPassword}
           </div>
 
           <div className="form-group">
@@ -142,13 +170,18 @@ class Register extends React.Component {
                 name="formHorizontalRadios"
                 type="radio"
                 label="Male"
+                value={this.state.sex.value}
+                onChange={this.handleChange}
               />
               <Form.Check
                 name="formHorizontalRadios"
                 type="radio"
                 label="Female"
+                value={this.state.sex.value}
+                onChange={this.handleChange}
               />
             </Form.Group>
+            {errorSex}
           </div>
 
           <Form.Group as={Col} controlId="formDropdown">
@@ -171,6 +204,11 @@ class Register extends React.Component {
                 <Button variant="primary" onClick={this.handleSubmit}>
                   Register{" "}
                 </Button>
+                <Button
+                  variant="primary"
+                  title="Login"
+                  onPress={() => this.props.navigation.navigate("Login")}
+                />
               </div>
             </div>
           </div>
