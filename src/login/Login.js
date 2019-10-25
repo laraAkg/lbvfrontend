@@ -7,8 +7,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Register from "../register/Register";
 import { Link } from "react-router-dom";
-import  { Redirect } from 'react-router-dom'
-import { validateLogin }  from "../helper/Validator"
+import  { Redirect } from 'react-router-dom';
+import validator from 'validator';
 import "./Login.css";
 
 class Login extends React.Component {
@@ -25,7 +25,10 @@ class Login extends React.Component {
     };
   }
 
+
+
 handleChange = e => {
+
     this.setState({
       [e.target.name]:{...this.state[e.target.name],
       value:e.target.value}
@@ -77,7 +80,7 @@ fetch("http://localhost:8080/ok",
           className="FormFields"
           onSubmit={this.handleSubmit}
         >
-          <div className="form-grou">
+          <div className="form-group">
             <label className="FormField__Label" htmlFor="email">
               E-Mail Address
             </label>
@@ -92,7 +95,7 @@ fetch("http://localhost:8080/ok",
             />
           </div>
 
-          <div className="form-grou">
+          <div className="form-group">
             <label className="FormField__Label" htmlFor="password">
               Password
             </label>
