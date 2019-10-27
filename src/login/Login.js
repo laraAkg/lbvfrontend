@@ -2,12 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Register from "../register/Register";
-import { Link } from "react-router-dom";
-import  { Redirect } from 'react-router-dom';
 import validator from 'validator';
 import "./Login.css";
 

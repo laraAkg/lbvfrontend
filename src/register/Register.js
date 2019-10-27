@@ -2,9 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import validator from "validator";
 import "./register.css";
 
@@ -16,8 +13,8 @@ class Register extends React.Component {
       email: { value: "", message: "Invalid Email" },
       password: { value: "", message: "Password too short" },
       confPassword: { value: "", message: "Password not same" },
-      sex: { value: "", message: "Please select your sex" },
-      option: { value: "", message: "Invalid option" }
+      sex: { value: "male", message: "Please select your sex" },
+      country: { value: "switzerland", message: "Invalid option" }
     };
 
     this.state = {
@@ -165,38 +162,22 @@ class Register extends React.Component {
           </div>
 
           <div className="form-group">
-            <Form.Group>
-              <Form.Check
-                name="formHorizontalRadios"
-                type="radio"
-                label="Male"
-                value={this.state.sex.value}
-                onChange={this.handleChange}
-              />
-              <Form.Check
-                name="formHorizontalRadios"
-                type="radio"
-                label="Female"
-                value={this.state.sex.value}
-                onChange={this.handleChange}
-              />
-            </Form.Group>
+            <div onChange={this.handleChange}>
+              <input type="radio" value="male" name="sex" /> Male
+              <input type="radio" value="female" name="sex" /> Female
+            </div>
             {errorSex}
           </div>
 
-          <Form.Group as={Col} controlId="formDropdown">
-            <Form.Label>State</Form.Label>
-            <Form.Control
-              as="select"
-              value={this.state.option.value}
-              onChange={this.handleChange}
-              name="option"
-            >
-              <option>Switzerland</option>
-              <option>Germany</option>
-              <option>France</option>
-            </Form.Control>
-          </Form.Group>
+          <select
+            name="country"
+            value={this.state.country.value}
+            onChange={this.handleChange}
+          >
+            <option value="switzerland">Switzerland</option>
+            <option value="germany">Germany</option>
+            <option value="austria">Austria</option>
+          </select>
 
           <div className="container">
             <div className="row">
