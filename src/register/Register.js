@@ -33,7 +33,7 @@ class Register extends React.Component {
   };
 
   checkConfirmPassword = value => {
-    return value === this.state.password.value;
+    return value === this.state.password.value && value.length >= 6;
   };
 
   checkIfSexNull = value => {
@@ -179,20 +179,20 @@ class Register extends React.Component {
             <option value="austria">Austria</option>
           </select>
 
-          <div className="container">
-            <div className="row">
-              <div className="col" id="buttonLayoutLeft">
-                <Button variant="primary" onClick={this.handleSubmit}>
-                  Register{" "}
-                </Button>
-                <Button
-                  variant="primary"
-                  title="Login"
-                  onPress={() => this.props.navigation.navigate("Login")}
-                />
-              </div>
-            </div>
-          </div>
+        <div className="container">
+                    <div className="row">
+                      <div className="col" id="buttonLayoutLeft">
+                        <Button variant="primary" onClick={this.handleSubmit}>
+                          Register{" "}
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="col" id="buttonLayoutRight">
+                     <Button variant="primary" onClick={this.handleSubmit}>
+                                      Login{" "}
+                                    </Button>
+                    </div>
+                  </div>
         </form>
       </div>
     );

@@ -1,16 +1,49 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Button from "react-bootstrap/Button";
+
 import "./Blog.css";
 
 class Blog extends React.Component {
 
+  logout = e => {
+   localStorage.clear();
+   window.location.href = '/login';
+   };
+
   render() {
+    return (
+      <div>
+      <div id="buttonTopRight">
+         <Button variant="primary" onClick={this.logout}>
+                         Logout{" "}
+          </Button>
+      </div>
+      <div id="blog">
+        <div id="textInCenter">
+        <img src={require('../img/logo.png')} />
 
-      return (
+        </div>
+        <p>
+          React (also known as React.js or ReactJS) is a JavaScript library for
+          building user interfaces. It is maintained by Facebook and a community
+          of individual developers and companies.
+        </p>
 
-    <h1>Hello, world!</h1>
-);
+        <p>
+          React can be used as a base in the development of single-page or
+          mobile applications, as it is optimal for fetching rapidly changing
+          data that needs to be recorded. However, fetching data is only the
+          beginning of what happens on a web page, which is why complex React
+          applications usually require the use of additional libraries for state
+          management, routing, and interaction with an API: Redux, React Router
+          and axios are examples of such libraries.
+        </p>
+      </div>
+      </div>
+
+    );
   }
 }
 

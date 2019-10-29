@@ -1,4 +1,4 @@
-#login{
+#blog{
 background-color:#d7e3f5;
 width:500px;
 padding: 50px;
@@ -8,15 +8,16 @@ margin:100px auto;
 
 #textInCenter{
 text-align: center;
-padding: 20px;
+padding: 5px;
 }
 
-#buttonLayoutRight{
-text-align: right;
-margin: 5px;
-}
 
-#buttonLayoutLeft{
-text-align: left;
-margin: 5px;
-}
+ #buttonTopRight {
+     margin-top: 1px;
+     padding-top: 25px;
+     padding-right: 25px;
+     margin-right: 2px;
+     position:absolute;
+     top:0;
+     right:0;
+ }
