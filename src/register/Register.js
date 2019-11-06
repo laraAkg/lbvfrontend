@@ -4,7 +4,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
 import validator from "validator";
 import "./register.css";
+import { Link,withRouter } from 'react-router-dom';
 
+/**
+ * Author: Lara Akgün
+ * Datum: 05.11.2019
+ * Diese JS Klasse handlet das Registrieren
+ */
 class Register extends React.Component {
   constructor(props) {
     super(props);
@@ -13,31 +19,48 @@ class Register extends React.Component {
       email: { value: "", message: "Invalid Email" },
       password: { value: "", message: "Password too short" },
       confPassword: { value: "", message: "Password not same" },
-      sex: { value: "male", message: "Please select your sex" },
+      age: { value: "", message: "Age is empty" },
+      sex: { value: "", message: "Please select your sex" },
       country: { value: "switzerland", message: "Invalid option" }
     };
 
     this.state = {
-      errors: { email: true, password: true, confPassword: true, sex: true },
+      errors: {
+        email: true,
+        password: true,
+        age: true,
+        confPassword: true,
+        sex: true,
+      },
+       responseError: '',
 
       ...this.formDefaults
     };
   }
 
+//Checkt ab ob die eingegebene Email valid ist
   checkEmail = value => {
     return validator.isEmail(value);
   };
 
+//Checkt ab ob das Passwort 10 Zeichen lang ist
   checkPassword = value => {
-    return value.length >= 6;
+    return value.length >= 10;
   };
 
+//Checkt ab ob die eingegebenen Passwörter gleich sind
   checkConfirmPassword = value => {
     return value === this.state.password.value && value.length >= 6;
   };
 
+//Checkt ab ob der User etwas ausgewählt hat
   checkIfSexNull = value => {
-    return !value === "";
+    return value
+  };
+
+//Checkt ab ob der User etwas eingegeben hat
+  checkIfAgeIsNull = value => {
+    return !value == "";
   };
 
   handleChange = e => {
@@ -46,33 +69,52 @@ class Register extends React.Component {
     });
   };
 
+//Wird beim anklicken ausgeführt
   handleSubmit = e => {
     const isEmailValid = this.checkEmail(this.state.email.value);
     const isPasswordValid = this.checkPassword(this.state.password.value);
-    const isConfPasswordValid = this.checkConfirmPassword(
-      this.state.confPassword.value
-    );
+    const isAgeValid = this.checkIfAgeIsNull(this.state.age.value);
+    const isConfPasswordValid = this.checkConfirmPassword(this.state.confPassword.value);
     const isSexSelected = this.checkIfSexNull(this.state.sex.value);
+    const isError = !isEmailValid || !isPasswordValid || !isAgeValid || !isConfPasswordValid || !isSexSelected;
     this.setState({
       errors: {
         email: isEmailValid,
         password: isPasswordValid,
         confPassword: isConfPasswordValid,
+        age: isAgeValid,
         sex: isSexSelected
       }
     });
 
-    if (this.state.errors.email && this.state.errors.password) {
-      fetch("http://localhost:8080/ok", {
+    if (!isError) {
+      let that = this;
+      fetch("http://localhost:8080/register", {
         headers: {
           Accept: "text/plain",
           "Content-Type": "application/json"
         },
         method: "POST",
-        body: JSON.stringify({ val: this.state.password.value })
+        body:
+        JSON.stringify({
+              username: this.state.email.value,
+              password: this.state.password.value,
+              age: this.state.age.value,
+              gender: this.state.sex.value,
+              state: this.state.country.value
+        })
       })
         .then(function(res) {
-          res.json().then(value => console.log(value));
+          res.text().then(value => {
+          if(value == 1){
+            that.props.history.push('/blog')
+          }else{
+          that.setState({
+               responseError: value
+          });
+          }
+          });
+
         })
         .catch(function(res) {
           console.log(res);
@@ -82,11 +124,13 @@ class Register extends React.Component {
   };
 
   render() {
+  //Zeigt Error-Meldung an
     let errorEmail;
     if (!this.state.errors.email) {
       errorEmail = <span className="error">{this.state.email.message}</span>;
     }
 
+//Zeigt Error-Meldung an
     let errorPassword;
     if (!this.state.errors.password) {
       errorPassword = (
@@ -94,6 +138,7 @@ class Register extends React.Component {
       );
     }
 
+//Zeigt Error-Meldung an
     let errorConfPassword;
     if (!this.state.errors.confPassword) {
       errorConfPassword = (
@@ -101,10 +146,25 @@ class Register extends React.Component {
       );
     }
 
+//Zeigt Error-Meldung an
+    let errorAge;
+    if (!this.state.errors.age) {
+      errorAge = <span className="error">{this.state.age.message}</span>;
+    }
+
+//Zeigt Error-Meldung an
     let errorSex;
     if (!this.state.errors.sex) {
       errorSex = <span className="error">{this.state.sex.message}</span>;
     }
+//Zeigt Error-Meldung an
+    let errorResponse;
+    if (this.state.responseError) {
+      errorResponse = <span className="error">{this.state.responseError}</span>;
+      console.log(this.state.responseError)
+    }
+
+
 
     return (
       <div id="register">
@@ -162,8 +222,24 @@ class Register extends React.Component {
           </div>
 
           <div className="form-group">
+            <label className="FormField__Label" htmlFor="number">
+              Age
+            </label>
+            <input
+              type="number"
+              className="form-control"
+              className="FormField__Input"
+              placeholder="Age"
+              name="age"
+              value={this.state.age.value}
+              onChange={this.handleChange}
+            />
+            {errorAge}
+          </div>
+
+          <div className="form-group">
             <div onChange={this.handleChange}>
-              <input type="radio" value="male" name="sex" /> Male
+              <input type="radio" value="male" name="sex"/> Male
               <input type="radio" value="female" name="sex" /> Female
             </div>
             {errorSex}
@@ -179,23 +255,23 @@ class Register extends React.Component {
             <option value="austria">Austria</option>
           </select>
 
-        <div className="container">
-                    <div className="row">
-                      <div className="col" id="buttonLayoutLeft">
-                        <Button variant="primary" onClick={this.handleSubmit}>
-                          Register{" "}
-                        </Button>
-                      </div>
-                    </div>
-                    <div className="col" id="buttonLayoutRight">
-                     <Button variant="primary" onClick={this.handleSubmit}>
-                                      Login{" "}
-                                    </Button>
-                    </div>
-                  </div>
+          <div className="container">
+            <div className="row">
+              <div className="col" id="buttonLayoutLeft">
+                <Button variant="primary" onClick={this.handleSubmit}>
+                  Register{" "}
+                </Button>
+              </div>
+            </div>
+            <div className="col" id="buttonLayoutRight">
+            <Link to='login'>Login</Link><br/>
+            </div>
+          </div>
         </form>
+                    {errorResponse}
+
       </div>
     );
   }
 }
-export default Register;
+export default withRouter(Register);

@@ -4,6 +4,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
 import validator from 'validator';
 import "./Login.css";
+import { Link } from 'react-router-dom';
+
 
 class Login extends React.Component {
   constructor(props) {
@@ -113,9 +115,8 @@ handleChange = e => {
           <div className="container">
             <div className="row">
               <div className="col" id="buttonLayoutLeft">
-                <Button variant="primary" onClick={this.redirectRegister}>
-                  Register{" "}
-                </Button>
+                                         <Link to='register'>Register</Link><br/>
+
               </div>
             </div>
             <div className="col" id="buttonLayoutRight">
