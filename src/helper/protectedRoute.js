@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import auth from "./authentification";
+import auth from "./authentication";
 
 export const ProtectedRoute = ({
   component: Component,
@@ -10,13 +10,14 @@ export const ProtectedRoute = ({
     <Route
       {...rest}
       render={props => {
+        console.info(auth.isAuthenticated())
         if (auth.isAuthenticated()) {
           return <Component {...props} />;
         } else {
           return (
             <Redirect
               to={{
-                pathname: "/",
+                pathname: "/login",
                 state: {
                   from: props.location
                 }

@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import validator from "validator";
 import "./register.css";
 import { Link,withRouter } from 'react-router-dom';
+import authentication from '../helper/authentication'
 
 /**
  * Author: Lara Akgün
@@ -107,6 +108,7 @@ class Register extends React.Component {
         .then(function(res) {
           res.text().then(value => {
           if(value == 1){
+            authentication.login();
             that.props.history.push('/blog')
           }else{
           that.setState({
@@ -179,8 +181,7 @@ class Register extends React.Component {
             </label>
             <input
               type="email"
-              className="form-control"
-              className="FormField__Input"
+              className="form-control FormField__Input"
               placeholder="Enter your email"
               name="email"
               value={this.state.email.value}
@@ -195,8 +196,7 @@ class Register extends React.Component {
             </label>
             <input
               type="password"
-              className="form-control"
-              className="FormField__Input"
+              className="form-control FormField__Input"
               placeholder="Enter your password"
               name="password"
               value={this.state.password.value}
@@ -237,10 +237,14 @@ class Register extends React.Component {
             {errorAge}
           </div>
 
-          <div className="form-group">
-            <div onChange={this.handleChange}>
-              <input type="radio" value="male" name="sex"/> Male
-              <input type="radio" value="female" name="sex" /> Female
+          <div>
+            <div className="form-check form-check-inline" onChange={this.handleChange}>
+              <input type="radio" id="male" value="male" name="sex"/>
+              <label htmlFor="male">Male</label>
+            </div>
+            <div className="form-check form-check-inline" onChange={this.handleChange}>
+                          <input type="radio" id="female" value="female" name="sex" />
+                          <label htmlFor="female">Female</label>
             </div>
             {errorSex}
           </div>

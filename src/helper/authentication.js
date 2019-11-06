@@ -3,18 +3,16 @@ class Auth {
     this.authenticated = false;
   }
 
-  login(cb) {
-    this.authenticated = true;
-    cb();
+  login() {
+  localStorage.setItem('isLoggedIn', true);
   }
 
   logout(cb) {
-    this.authenticated = false;
-    cb();
+  localStorage.setItem('isLoggedIn', false);
   }
 
   isAuthenticated() {
-    return this.authenticated;
+    return localStorage.getItem('isLoggedIn');
   }
 }
 
