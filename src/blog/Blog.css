@@ -1,18 +1,4 @@
-#blog{
-background-color:#d7e3f5;
-width:500px;
-padding: 50px;
-margin:100px auto;
- border-radius:30px;
-}
-
-#textInCenter{
-text-align: center;
-padding: 5px;
-}
-
-
- #buttonTopRight {
+#buttonTopRight {
      margin-top: 1px;
      padding-top: 25px;
      padding-right: 25px;

@@ -1,16 +1,16 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
 import validator from "validator";
-import "./register.css";
-import { Link,withRouter } from 'react-router-dom';
-import authentication from '../helper/authentication'
+import "../helper/GeneralStyle.css";
+import { Link, withRouter } from "react-router-dom";
+import authentication from "../helper/authentication";
 
 /**
- * Author: Lara Akgün
- * Datum: 05.11.2019
- * Diese JS Klasse handlet das Registrieren
+ * Register page for user
+ * @author Lara Akgün
+ * @author Enma Ronquillo
+ * @version 08.11.2019
  */
 class Register extends React.Component {
   constructor(props) {
@@ -21,7 +21,7 @@ class Register extends React.Component {
       password: { value: "", message: "Password too short" },
       confPassword: { value: "", message: "Password not same" },
       age: { value: "", message: "Age is empty" },
-      sex: { value: "", message: "Please select your sex" },
+      gender: { value: "", message: "Please select your gender" },
       country: { value: "switzerland", message: "Invalid option" }
     };
 
@@ -31,35 +31,35 @@ class Register extends React.Component {
         password: true,
         age: true,
         confPassword: true,
-        sex: true,
+        gender: true
       },
-       responseError: '',
+      responseError: "",
 
       ...this.formDefaults
     };
   }
 
-//Checkt ab ob die eingegebene Email valid ist
+  //Checks if email is valid
   checkEmail = value => {
     return validator.isEmail(value);
   };
 
-//Checkt ab ob das Passwort 10 Zeichen lang ist
+  //Checks if password is more than 10 char long
   checkPassword = value => {
     return value.length >= 10;
   };
 
-//Checkt ab ob die eingegebenen Passwörter gleich sind
+  //Checks if passwords are equal
   checkConfirmPassword = value => {
     return value === this.state.password.value && value.length >= 6;
   };
 
-//Checkt ab ob der User etwas ausgewählt hat
-  checkIfSexNull = value => {
-    return value
+  //Checks if gender is selected
+  checkIfGenderNull = value => {
+    return value;
   };
 
-//Checkt ab ob der User etwas eingegeben hat
+  //Checks if age is written
   checkIfAgeIsNull = value => {
     return !value == "";
   };
@@ -70,23 +70,31 @@ class Register extends React.Component {
     });
   };
 
-//Wird beim anklicken ausgeführt
+  //Get Triggered when user click on register button
   handleSubmit = e => {
     const isEmailValid = this.checkEmail(this.state.email.value);
     const isPasswordValid = this.checkPassword(this.state.password.value);
     const isAgeValid = this.checkIfAgeIsNull(this.state.age.value);
-    const isConfPasswordValid = this.checkConfirmPassword(this.state.confPassword.value);
-    const isSexSelected = this.checkIfSexNull(this.state.sex.value);
-    const isError = !isEmailValid || !isPasswordValid || !isAgeValid || !isConfPasswordValid || !isSexSelected;
+    const isConfPasswordValid = this.checkConfirmPassword(
+      this.state.confPassword.value
+    );
+    const isGenderSelected = this.checkIfGenderNull(this.state.gender.value);
+    const isError =
+      !isEmailValid ||
+      !isPasswordValid ||
+      !isAgeValid ||
+      !isConfPasswordValid ||
+      !isGenderSelected;
     this.setState({
       errors: {
         email: isEmailValid,
         password: isPasswordValid,
         confPassword: isConfPasswordValid,
         age: isAgeValid,
-        sex: isSexSelected
+        gender: isGenderSelected
       }
     });
+    //Request and Response from backend
 
     if (!isError) {
       let that = this;
@@ -96,27 +104,25 @@ class Register extends React.Component {
           "Content-Type": "application/json"
         },
         method: "POST",
-        body:
-        JSON.stringify({
-              username: this.state.email.value,
-              password: this.state.password.value,
-              age: this.state.age.value,
-              gender: this.state.sex.value,
-              state: this.state.country.value
+        body: JSON.stringify({
+          username: this.state.email.value,
+          password: this.state.password.value,
+          age: this.state.age.value,
+          gender: this.state.gender.value,
+          state: this.state.country.value
         })
       })
         .then(function(res) {
           res.text().then(value => {
-          if(value == 1){
-            authentication.login();
-            that.props.history.push('/blog')
-          }else{
-          that.setState({
-               responseError: value
+            if (value == 1) {
+              authentication.login();
+              that.props.history.push("/blog");
+            } else {
+              that.setState({
+                responseError: value
+              });
+            }
           });
-          }
-          });
-
         })
         .catch(function(res) {
           console.log(res);
@@ -126,13 +132,21 @@ class Register extends React.Component {
   };
 
   render() {
-  //Zeigt Error-Meldung an
+
+      //Error for invalid Response
+      let errorResponse;
+      if (this.state.responseError) {
+        errorResponse = <span className="error">{this.state.responseError}</span>;
+        console.log(this.state.responseError);
+      }
+
+    //Error for invalid email
     let errorEmail;
     if (!this.state.errors.email) {
       errorEmail = <span className="error">{this.state.email.message}</span>;
     }
 
-//Zeigt Error-Meldung an
+    //Error for invalid password
     let errorPassword;
     if (!this.state.errors.password) {
       errorPassword = (
@@ -140,7 +154,7 @@ class Register extends React.Component {
       );
     }
 
-//Zeigt Error-Meldung an
+    //Error for invalid conf password
     let errorConfPassword;
     if (!this.state.errors.confPassword) {
       errorConfPassword = (
@@ -148,29 +162,21 @@ class Register extends React.Component {
       );
     }
 
-//Zeigt Error-Meldung an
+    //Error for invalid age
     let errorAge;
     if (!this.state.errors.age) {
       errorAge = <span className="error">{this.state.age.message}</span>;
     }
 
-//Zeigt Error-Meldung an
-    let errorSex;
-    if (!this.state.errors.sex) {
-      errorSex = <span className="error">{this.state.sex.message}</span>;
+    //Error for invalid gender
+    let errorGender;
+    if (!this.state.errors.gender) {
+      errorGender = <span className="error">{this.state.gender.message}</span>;
     }
-//Zeigt Error-Meldung an
-    let errorResponse;
-    if (this.state.responseError) {
-      errorResponse = <span className="error">{this.state.responseError}</span>;
-      console.log(this.state.responseError)
-    }
-
-
 
     return (
-      <div id="register">
-        <div id="textInCenter">
+      <div class="backgroundSquare">
+        <div class="textInCenter">
           <h1>Register</h1>
         </div>
 
@@ -211,8 +217,7 @@ class Register extends React.Component {
             </label>
             <input
               type="password"
-              className="form-control"
-              className="FormField__Input"
+              className="form-control FormField__Input"
               placeholder="Confirm your password"
               name="confPassword"
               value={this.state.confPassword.value}
@@ -227,8 +232,7 @@ class Register extends React.Component {
             </label>
             <input
               type="number"
-              className="form-control"
-              className="FormField__Input"
+              className="form-control FormField__Input"
               placeholder="Age"
               name="age"
               value={this.state.age.value}
@@ -238,42 +242,51 @@ class Register extends React.Component {
           </div>
 
           <div>
-            <div className="form-check form-check-inline" onChange={this.handleChange}>
-              <input type="radio" id="male" value="male" name="sex"/>
+            <div
+              className="form-check form-check-inline"
+              onChange={this.handleChange}
+            >
+              <input type="radio" id="male" value="male" name="gender" />
               <label htmlFor="male">Male</label>
             </div>
-            <div className="form-check form-check-inline" onChange={this.handleChange}>
-                          <input type="radio" id="female" value="female" name="sex" />
-                          <label htmlFor="female">Female</label>
+            <div
+              className="form-check form-check-inline"
+              onChange={this.handleChange}
+            >
+              <input type="radio" id="female" value="female" name="gender" />
+              <label htmlFor="female">Female</label>
             </div>
-            {errorSex}
+          </div>
+          {errorGender}
+
+          <div className="form-group">
+            <select
+              name="country"
+              value={this.state.country.value}
+              onChange={this.handleChange}
+            >
+              <option value="switzerland">Switzerland</option>
+              <option value="germany">Germany</option>
+              <option value="austria">Austria</option>
+            </select>
           </div>
 
-          <select
-            name="country"
-            value={this.state.country.value}
-            onChange={this.handleChange}
-          >
-            <option value="switzerland">Switzerland</option>
-            <option value="germany">Germany</option>
-            <option value="austria">Austria</option>
-          </select>
+          <div className="btn-group">
+            <Button
+              className="btn btn-primary"
+              variant="primary"
+              onClick={this.handleSubmit}
+            >
+              Register{" "}
+            </Button>
+            <div class="divider" />
 
-          <div className="container">
-            <div className="row">
-              <div className="col" id="buttonLayoutLeft">
-                <Button variant="primary" onClick={this.handleSubmit}>
-                  Register{" "}
-                </Button>
-              </div>
-            </div>
-            <div className="col" id="buttonLayoutRight">
-            <Link to='login'>Login</Link><br/>
-            </div>
+            <Link to="login" className="btn btn-default">
+              Login
+            </Link>
           </div>
         </form>
-                    {errorResponse}
-
+        {errorResponse}
       </div>
     );
   }

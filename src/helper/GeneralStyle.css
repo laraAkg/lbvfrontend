@@ -1,0 +1,22 @@
+.backgroundSquare{
+background-color:#d7e3f5;
+width:500px;
+padding: 50px;
+margin:100px auto;
+ border-radius:30px;
+}
+
+.divider{
+    width:10px;
+    height:auto;
+    display:inline-block;
+}
+
+.textInCenter{
+text-align: center;
+padding: 5px;
+}
+
+.error {
+    color: red;
+}
