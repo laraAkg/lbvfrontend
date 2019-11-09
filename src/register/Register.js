@@ -18,9 +18,9 @@ class Register extends React.Component {
 
     this.formDefaults = {
       email: { value: "", message: "Invalid Email" },
-      password: { value: "", message: "Password too short" },
+      password: { value: "", message: "Invalid password (Min. 10 Char)" },
       confPassword: { value: "", message: "Password not same" },
-      age: { value: "", message: "Age is empty" },
+      age: { value: "", message: "Invalid age (Min. 0 Years old)" },
       gender: { value: "", message: "Please select your gender" },
       country: { value: "switzerland", message: "Invalid option" }
     };
@@ -61,7 +61,9 @@ class Register extends React.Component {
 
   //Checks if age is written
   checkIfAgeIsNull = value => {
-    return !value == "";
+    if (value > 0) {
+      return !value == "";
+    }
   };
 
   handleChange = e => {
@@ -132,13 +134,12 @@ class Register extends React.Component {
   };
 
   render() {
-
-      //Error for invalid Response
-      let errorResponse;
-      if (this.state.responseError) {
-        errorResponse = <span className="error">{this.state.responseError}</span>;
-        console.log(this.state.responseError);
-      }
+    //Error for invalid Response
+    let errorResponse;
+    if (this.state.responseError) {
+      errorResponse = <span className="error">{this.state.responseError}</span>;
+      console.log(this.state.responseError);
+    }
 
     //Error for invalid email
     let errorEmail;

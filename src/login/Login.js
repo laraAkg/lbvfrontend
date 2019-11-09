@@ -17,7 +17,7 @@ class Login extends React.Component {
     super(props);
 
     this.formDefaults = {
-      email: { value: "", message: "Invalid Email" },
+      email: { value: "", message: "Invalid email" },
       password: { value: "", message: "Invalid password" }
     };
 
